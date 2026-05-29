@@ -206,3 +206,9 @@ By contributing to this project, you agree to abide by its terms.
 - Check out further details on [contributing guidelines for tidymodels
   packages](https://www.tidymodels.org/contribute/) and [how to get
   help](https://www.tidymodels.org/help/). Footer
+
+## Author
+
+**Mohammad Hamza Piracha** |
+Data Scientist & Applied AI Engineer |
+[LinkedIn](https://www.linkedin.com/in/hamza-piracha) | hamzapiracha@live.com
