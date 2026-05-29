@@ -111,6 +111,12 @@ extract_cluster_assignment.kmodes <- function(object, ...) {
 }
 
 #' @export
+extract_cluster_assignment.ml_kmeans <- function(object, ...) {
+  n_clusters <- length(object$obs_per_cluster)
+  cluster_assignment_tibble(object$clusters, n_clusters, ...)
+}
+
+#' @export
 extract_cluster_assignment.hclust <- function(object,
                                               ...,
                                               call = rlang::caller_env(0)) {

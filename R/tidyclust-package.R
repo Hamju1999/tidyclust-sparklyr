@@ -31,6 +31,10 @@
 #' @importFrom stats na.omit
 #' @importFrom stats predict
 #' @importFrom tibble as_tibble
+#' @import sparklyr
+#' @importFrom sparklyr ml_kmeans
+#' @importFrom sparklyr ml_fit
+#' @importFrom sparklyr ml_predict
 #' @importFrom utils capture.output
 ## usethis namespace: end
 NULL

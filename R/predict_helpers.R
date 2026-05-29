@@ -58,6 +58,13 @@ make_predictions <- function(x, prefix, n_clusters) {
   make_predictions(clusters, prefix, n_modes)
 }
 
+.k_means_predict_sparklyr <- function(object, new_data, prefix = "Cluster_") {
+  clusters <- predict(object, new_data)
+  n_clusters <- length(object$obs_per_cluster)
+
+  make_predictions(clusters, prefix, n_clusters)
+}
+
 .hier_clust_predict_stats <- function(object, new_data, ..., prefix = "Cluster_") {
   linkage_method <- object$method
 

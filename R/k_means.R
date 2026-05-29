@@ -13,6 +13,7 @@
 #' - \link[=details_k_means_stats]{stats}: Classical K-means
 #' - \link[=details_k_means_ClusterR]{ClusterR}: Classical K-means
 #' - \link[=details_k_means_klaR]{klaR}: K-Modes
+#' - \link[=details_k_means_sparklyr]{sparklyr}: Classical K-means
 #' - \link[=details_k_means_clustMixType]{clustMixType}: K-prototypes
 #'
 #' @param mode A single character string for the type of model. The only
@@ -307,5 +308,55 @@ check_args.k_means <- function(object) {
   res$size <- res$size[new_order]
   res$modes <- res$modes[new_order, , drop = FALSE]
   res$withindiff <- res$withindiff[new_order]
+  res
+}
+
+#' Simple Wrapper around sparklyr ml_kmeans
+#'
+#' This wrapper runs `sparklyr::ml_kmeans()` and adds a check that `centers` is
+#' specified. And reorders the clusters.
+#'
+#' @inheritParams sparklyr::ml_kmeans
+#' @param ... Other arguments passed to `sparklyr::ml_kmeans()`
+#'
+#' @return Result from `sparklyr::ml_kmeans()`
+#' @keywords internal
+#' @export
+.k_means_fit_sparklyr <- function(data,
+                                  formula = NULL,
+                                  clusters,
+                                  num_init = 1,
+                                  max_iters = 20,
+                                  initializer = "k-means||",
+                                  CENTROIDS = NULL,
+                                  tol = 1e-04,
+                                  tol_optimal_init = 0.3,
+                                  seed = NULL) {
+  if (is.null(clusters)) {
+    rlang::abort(
+      "Please specify `num_clust` to be able to fit specification.",
+      call = call("fit")
+    )
+  }
+
+  res <- sparklyr::ml_kmeans()(
+    data,
+    clusters,
+    num_init = num_init,
+    max_iters = max_iters,
+    initializer = initializer,
+    CENTROIDS = CENTROIDS,
+    tol = tol,
+    tol_optimal_init = tol_optimal_init,
+    seed = seed
+  )
+
+  colnames(res$centroids) <- colnames(data)
+
+  new_order <- unique(res$clusters)
+  res$clusters <- order(new_order)[res$clusters]
+  res$centroids <- res$centroids[new_order, , drop = FALSE]
+  res$WCSS_per_cluster <- res$WCSS_per_cluster[, new_order, drop = FALSE]
+  res$obs_per_cluster <- res$obs_per_cluster[, new_order, drop = FALSE]
   res
 }

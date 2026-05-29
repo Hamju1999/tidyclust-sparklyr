@@ -143,6 +143,30 @@ extract_fit_summary.kmodes <- function(object,
 }
 
 #' @export
+extract_fit_summary.ml_kmeans <- function(object,
+                                       ...,
+                                       prefix = "Cluster_") {
+  names <- paste0(prefix, seq_len(nrow(object$centers)))
+  names <- factor(names)
+
+  cluster_asignments <- factor(
+    names[object$cluster],
+    levels = levels(names)
+  )
+
+  centroids <- tibble::as_tibble(object$centers)
+
+  list(
+    cluster_names = names,
+    centroids = centroids,
+    n_members = as.integer(object$size),
+    sse_within_total_total = object$withinss,
+    sse_total = object$tot.withinss,
+    orig_labels = seq_len(length(table(object$cluster))),
+    cluster_assignments = cluster_asignments
+  )
+}
+#' @export
 extract_fit_summary.hclust <- function(object, ...) {
   clusts <- extract_cluster_assignment(object, ...)$.cluster
   n_clust <- dplyr::n_distinct(clusts)
