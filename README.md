@@ -147,7 +147,7 @@ using 2 dimensional toy data sets.
 
 <img src="man/figures/README-comparison-1.svg" alt="Mock comparison for different clustering methods for different data sets. Each row correspods to a clustering method, each column corresponds to a data set type." width="100%" />
 
-## Sparklyr Engine (Hamza's Contribution)
+## Sparklyr Engine (My Contribution)
 
 This branch adds a `sparklyr` engine for `k_means()`, enabling 
 distributed K-Means clustering on Apache Spark via the familiar 
