@@ -3,13 +3,6 @@
 
 # tidyclust <img src="man/figures/logo.svg" align="right" height="139" />
 
-<!-- badges: start -->
-
-[![Codecov test
-coverage](https://codecov.io/gh/tidymodels/tidyclust/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/tidyclust?branch=main)
-[![R-CMD-check](https://github.com/tidymodels/tidyclust/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/tidyclust/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
 The goal of tidyclust is to provide a tidy, unified interface to
 clustering models. The packages is closely modeled after the
 [parsnip](https://parsnip.tidymodels.org/) package.
@@ -153,6 +146,44 @@ Below is a visualization of the available models and how they compare
 using 2 dimensional toy data sets.
 
 <img src="man/figures/README-comparison-1.svg" alt="Mock comparison for different clustering methods for different data sets. Each row correspods to a clustering method, each column corresponds to a data set type." width="100%" />
+
+## Sparklyr Engine (Hamza's Contribution)
+
+This branch adds a `sparklyr` engine for `k_means()`, enabling 
+distributed K-Means clustering on Apache Spark via the familiar 
+tidymodels interface.
+
+### Usage
+
+```r
+library(tidyclust)
+library(sparklyr)
+
+k_means(num_clusters = 3) %>%
+  set_engine("sparklyr") %>%
+  set_mode("partition") %>%
+  fit(~., data = your_spark_dataframe)
+```
+
+### What was added
+
+- `R/k_means_sparklyr.R` - sparklyr engine definition
+- `R/k_means_data.R` - sparklyr engine registered via modelenv
+- `R/predict_helpers.R` - `.k_means_predict_sparklyr()` implementation
+- `R/extract_cluster_assignment.R` - `extract_cluster_assignment.ml_kmeans()` method
+- `man/rmd/k_means_sparklyr.Rmd` and `k_means_sparklyr.md` - engine documentation
+- `tests/testthat/test-k_means_sparklyr.R` - full test suite on the Ames dataset
+
+### Known limitations
+
+Bisecting K-Means (`bisect_kmeans()`) and Gaussian Mixture Models 
+(`gaussian_mixture()`) were attempted but blocked by architectural 
+conflicts within the tidyclust fit-method. Scoped to future development.
+
+### Base package
+
+This work extends the original 
+[tidymodels/tidyclust](https://github.com/tidymodels/tidyclust) package.
 
 ## Contributing
 
